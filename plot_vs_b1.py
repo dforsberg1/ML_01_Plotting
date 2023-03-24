@@ -170,6 +170,10 @@ def contour_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, p
 
     # Adjust size of plot
     plt.rcParams['figure.dpi'] = 80
+    
+    # Round final parameter estimates to nearest integer (for graphing purposes)
+    b0_final = round(b0_final_0,0)
+    b1_final = round(b1_final_0,0)
 
     # Define a function to format the label values
     def label_formatter(val):
@@ -185,11 +189,11 @@ def contour_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, p
         return str(int(round(np.exp(val),0)))
 
     # Caclulate total cost given optimized parameters
-    cost_final = compute_cost_0(x_train_0, y_train_0, b0_final_0, b1_final_0)
+    cost_final = compute_cost_0(x_train_0, y_train_0, b0_final, b1_final)
 
     # Define the b0 and b1 range
-    b0_range = np.linspace(b0_final_0 - 300, b0_final_0 + 300, 100)
-    b1_range = np.linspace(b1_final_0 - 300, b1_final_0 + 300, 100)
+    b0_range = np.linspace(b0_final - 300, b0_final + 300, 100)
+    b1_range = np.linspace(b1_final - 300, b1_final + 300, 100)
 
     # Define the contour levels
     levels = [np.log(cost) for cost in [100, 1000, 5000, 12000, 25000, 50000, 100000]]
