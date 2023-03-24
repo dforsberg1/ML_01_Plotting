@@ -383,3 +383,79 @@ def contour_plot_zoom(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost
     # Display the plot
     plt.show()
 
+def plot_cost_escalation(x_train_0, y_train_0, b0_final_0, b1_final_0, p_hist_0, J_hist_0, compute_cost_0):
+
+    """
+    Using matplotlib: 2D Plot of Cost Escalation
+    """
+
+    # Adjust size of plot
+    plt.rcParams['figure.dpi'] = 100
+
+    import matplotlib.ticker as ticker
+
+    def axis_tick_formatter_k(x, pos):
+        if x == 0:
+            return "0"
+        elif x < 0:
+            return "-{}k".format(abs(int(x / 1000)))
+        else:
+            return "{}k".format(int(x / 1000));
+
+    def axis_tick_formatter_B(x, pos):
+        if x == 0:
+            return "0"
+        elif x < 0:
+            return "-{}B".format(abs(int(x / 1000000000)))
+        else:
+            return "{}B".format(int(x / 1000000000));
+
+    # Set up
+    x = np.zeros(len(p_hist_0))
+    y = np.zeros(len(p_hist_0))
+    v = np.zeros(len(p_hist_0))
+
+    for i in range(len(p_hist_0)):
+        x[i] = p_hist_0[i][0]
+        y[i] = p_hist_0[i][1]
+        v[i] = J_hist_0[i]
+
+    # Round final parameter estimates to nearest integer (for graphing purposes)
+    b0_final = round(b0_final_0,0)
+    b1_final = round(b1_final_0,0)
+
+    # Set range for b1
+    b1_array = np.arange(-200000, 200000, 1000)
+    cost = np.zeros_like(b1_array)
+
+    for i in range(len(b1_array)):
+        tmp_b1 = b1_array[i]
+        cost[i] = compute_cost_0(x_train_0, y_train_0, tmp_b1, b0_final)
+
+    # Filter the cost values to only plot those less than or equal to np.max(v)
+    threshold = cost <= np.max(v)
+    b1_array = b1_array[threshold]
+    cost = cost[threshold]
+
+    # Plot first subplot
+    fig1, ax1 = plt.subplots(figsize=(8, 6))
+    ax1.plot(b1_array, cost)
+    ax1.plot(x, v, c='#FF40FF')
+    ax1.set_title('Figure: Cost vs. $\\beta_1$\n', fontsize=14) # Add a line break after the main title
+    ax1.text(0.5, 1.21, 'Cost-Convergence Relationship: Exploring the Effect of Alpha on Model Convergence',
+             fontsize=16, ha='center', transform=ax1.transAxes)
+    ax1.text(0.5, 1.14, 'Cost Fails To Converge When Alpha Is Too Large',
+             fontsize=14, ha='center', transform=ax1.transAxes)
+
+    # Set labels and tick marks
+    ax1.set_ylabel('Cost', fontsize = 12)
+    ax1.set_xlabel(r"$\beta_1$ with $\beta_0$ = " + f"{b0_final:.0f}", fontsize = 12)
+    ax1.xaxis.set_major_locator(MaxNLocator(8)) # Sets the number of x-ticks
+
+    # x-axis and y-axis tick formatting
+    ax1.yaxis.set_major_formatter(ticker.FuncFormatter(axis_tick_formatter_B))
+    ax1.xaxis.set_major_formatter(ticker.FuncFormatter(axis_tick_formatter_k))
+
+    # Add an arrow
+    ax1.arrow(x[-2], v[-2], x[-1] - x[-2], v[-1] - v[-2], head_width=3e3, head_length=1e8, fc='#FF40FF', ec='#FF40FF');
+    
