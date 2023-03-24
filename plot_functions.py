@@ -427,20 +427,20 @@ def plot_cost_escalation(x_train_0, y_train_0, b0_final_0, b1_final_0, p_hist_0,
 
     # Set range for b1
     b1_array = np.arange(-200000, 200000, 1000)
-    cost = np.zeros_like(b1_array)
+    cost_1 = np.zeros_like(b1_array)
 
     for i in range(len(b1_array)):
         tmp_b1 = b1_array[i]
-        cost[i] = compute_cost_0(x_train_0, y_train_0, tmp_b1, b0_final)
+        cost_1[i] = compute_cost_0(x_train_0, y_train_0, tmp_b1, b0_final)
 
     # Filter the cost values to only plot those less than or equal to np.max(v)
-    threshold = cost <= np.max(v)
+    threshold = cost_1 <= np.max(v)
     b1_array = b1_array[threshold]
-    cost = cost[threshold]
+    cost_1 = cost_1[threshold]
 
     # Plot first subplot
     fig1, ax1 = plt.subplots(figsize=(8, 6))
-    ax1.plot(b1_array, cost)
+    ax1.plot(b1_array, cost_1)
     ax1.plot(x, v, c='#FF40FF')
     ax1.set_title('Figure: Cost vs. $\\beta_1$\n', fontsize=14) # Add a line break after the main title
     ax1.text(0.5, 1.21, 'Cost-Convergence Relationship: Exploring the Effect of Alpha on Model Convergence',
