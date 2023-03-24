@@ -393,6 +393,7 @@ def plot_cost_escalation(x_train_0, y_train_0, b0_final_0, b1_final_0, p_hist_0,
     plt.rcParams['figure.dpi'] = 100
 
     import matplotlib.ticker as ticker
+    from matplotlib.ticker import MaxNLocator
 
     def axis_tick_formatter_k(x, pos):
         if x == 0:
