@@ -129,4 +129,36 @@ def quiver_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_gradient_0
     # Display the plot
     plt.show()
 
+def cost_vs_iteration(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, J_hist_0):
+    
+    # Round final parameter estimates to nearest integer (for graphing purposes)
+    b0_final = round(b0_final_0,0)
+    b1_final = round(b1_final_0,0)
+    # Define range and step size for b1
+    b1_values = np.arange(b1_final - 200, b1_final + 200, 1)
+    
+    # Calculate costs # this is y = f(x) and is a parabola
+    costs = [compute_cost_0(x_train_0, y_train_0, b0_final, b1) for b1 in b1_values]
+
+    """
+    Plot cost vs. iteration step
+    """
+
+    # Adjust size of plot
+    plt.rcParams['figure.dpi'] = 100
+
+    # Plot cost versus iteration
+    fig, (ax1, ax2) = plt.subplots(1, 2, constrained_layout=True, figsize=(12,5))
+    ax1.plot(J_hist_0[:101]) 
+    ax2.plot(J_hist_0[:1001])
+    ax1.set_title("Cost vs. Iteration (start)");  ax2.set_title("Cost vs. Iteration (end)")
+    ax1.set_ylabel('Cost');  ax2.set_ylabel('Cost') 
+    ax1.set_xlabel('Iteration Step');  ax2.set_xlabel('Iteration Step') 
+
+    # Set the format of the tick labels on each y-axis
+    ax1.yaxis.set_major_formatter('{:.0f}'.format)
+    ax2.yaxis.set_major_formatter('{:.0f}'.format)
+
+    # Display the plot
+    plt.show()
 
