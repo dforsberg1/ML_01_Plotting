@@ -267,7 +267,7 @@ def contour_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, p
                 base=point
 
     # Convert list of arrow coordinates to pandas DataFrame
-    df_arrow_coords = pd.DataFrame(arrow_coords, columns=['x1', 'y1', 'x2', 'y2'])
+    # df_arrow_coords = pd.DataFrame(arrow_coords, columns=['x1', 'y1', 'x2', 'y2'])
 
     # Print the DataFrame
     # print(df_arrow_coords)
