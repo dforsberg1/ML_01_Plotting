@@ -298,6 +298,9 @@ def contour_plot_zoom(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost
       str: The formatted string value of the label.
       """
         return str(int(round(np.exp(val),0)))
+    
+    # Caclulate total cost given optimized parameters
+    cost_final = compute_cost_0(x_train_0, y_train_0, b0_final, b1_final)
 
     # Define the b0 and b1 range
     b0_range = np.linspace(b0_final - 20, b0_final + 20, 100)
