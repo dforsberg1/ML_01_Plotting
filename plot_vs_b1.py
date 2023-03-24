@@ -285,6 +285,19 @@ def contour_plot_zoom(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost
     # Round final parameter estimates to nearest integer (for graphing purposes)
     b0_final = round(b0_final_0,0)
     b1_final = round(b1_final_0,0)
+    
+    # Define a function to format the label values
+    def label_formatter(val):
+        """
+      Function to format the label values.
+
+      Parameters:
+      val (float): The value of the label.
+
+      Returns:
+      str: The formatted string value of the label.
+      """
+        return str(int(round(np.exp(val),0)))
 
     # Define the b0 and b1 range
     b0_range = np.linspace(b0_final - 20, b0_final + 20, 100)
