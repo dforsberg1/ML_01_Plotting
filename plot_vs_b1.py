@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 
 # Some additional functions
 
@@ -168,6 +167,8 @@ def contour_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, p
     """
     2D Contour plot of cost(b0,b1) over a range of values for b0 and b1
     """
+    
+    import pandas as pd
 
     # Adjust size of plot
     plt.rcParams['figure.dpi'] = 80
