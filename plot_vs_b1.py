@@ -45,7 +45,7 @@ def inbounds(a,b,xlim,ylim):
         return True
     return False
 
-def plot_vs_b1(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0):
+def plot_cost_vs_b1(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0):
     # Round final parameter estimates to nearest integer (for graphing purposes)
     b0_final = round(b0_final_0,0)
     b1_final = round(b1_final_0,0)
@@ -92,3 +92,36 @@ def plot_vs_b1(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0):
 
     # Show plot
     plt.show()
+
+def quiver_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_gradient_0):
+    """
+    Quiver Plot
+    """
+
+    # Adjust size of plot
+    plt.rcParams['figure.dpi'] = 150
+
+    # Set up grid of values for b_0 and b_1
+    b_0, b_1 = np.meshgrid(np.linspace(b0_final_0 - 300, b0_final_0 + 300, 10), np.linspace(b1_final_0 - 300, b1_final_0 + 300, 10))
+
+    # Compute gradients at each point on the grid
+    grad_b1 = np.zeros_like(b_0)
+    grad_b0 = np.zeros_like(b_1)
+    for i in range(b_1.shape[0]):
+        for j in range(b_0.shape[1]):
+            grad_b1[i][j], grad_b0[i][j] = compute_gradient_0(x_train_0, y_train_0, b_1[i][j], b_0[i][j])
+
+    # Set color array based on magnitude of gradients
+    n=-2
+    color_array = np.sqrt(((grad_b0-n)/2)**2 + ((grad_b1-n)/2)**2)
+
+    # Create a quiver plot of the gradients
+    plt.quiver(b_0, b_1, grad_b0, grad_b1, color_array, units='width')
+    plt.xlabel(r'$ \beta_0$')
+    plt.ylabel(r'$ \beta_1$')
+    plt.title(r'Quiver Plot of Gradients Over Values of $\beta_0$ and $\beta_1$')
+
+    # Display the plot
+    plt.show()
+
+
