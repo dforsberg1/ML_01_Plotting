@@ -64,32 +64,31 @@ def plot_vs_b1(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0):
     b1_gradients = np.round([compute_gradient_at_point(x_train_0, y_train_0, b0_final, b1) for b1 in b1_points])
     
     """
-    Create a graph that shows the cost function vs. b1 when b0 = b0_in  
+    Create a graph that shows the cost function vs. b1 when b0 = b0_in
     """
-    
+
     # Plot the cost vs. b1
     plt.ticklabel_format(style='plain', axis='y')
     plt.plot(b1_values, costs)
-    
+
     # Plot and label gradients at specific points
     plt.scatter(b1_points, cost_points, color = 'darkred', zorder = 3)
     plt.text(b1_points[0] - 12.5, cost_points[0] - 1000, r'$\frac{\partial J}{\partial \beta_1}$' + ' = ' + f"{round(b1_gradients[0])}", ha='right')
-    plt.text(b1_points[1], cost_points[1] + 3e3, r'$\frac{\partial J}{\partial \beta_1}$' + ' = ' + f"{round(b1_gradients[1])}", ha='center') 
+    plt.text(b1_points[1], cost_points[1] + 3e3, r'$\frac{\partial J}{\partial \beta_1}$' + ' = ' + f"{round(b1_gradients[1])}", ha='center')
     plt.text(b1_points[2] + 12.5, cost_points[2] - 1000, r'$\frac{\partial J}{\partial \beta_1}$' + ' = ' + f"{round(b1_gradients[2])}", ha='left')
-    
+
     # Iterate through each point in b1_points
     for b1 in b1_points:
         b1range = np.linspace(b1-25, b1+25, 10)
         y1 = compute_cost_0(x_train_0, y_train_0, b0_final, b1)  # choose point to plot tangent line
-        slope1 = partial_derivative_b1(x_train_0, y_train_0, b0_final, b1)  # establish slope parameter 
+        slope1 = partial_derivative_b1(x_train_0, y_train_0, b0_final, b1)  # establish slope parameter
         
         plt.plot(b1range, tangent_line(b1range, b1, y1, slope1), color='darkred', linestyle='dashed', linewidth=2)
-        
-        # Create labels for x-axis, y-axis, and main title
-        plt.xlabel(r"$\beta_1$ with $\beta_0$ = " + f"{b0_final:.0f}")
-        plt.ylabel('Cost')
-        plt.title(r'Cost vs. $\beta_1$')
-        
-        # Show plot
-        plt.show()
 
+    # Create labels for x-axis, y-axis, and main title
+    plt.xlabel(r"$\beta_1$ with $\beta_0$ = " + f"{b0_final:.0f}")
+    plt.ylabel('Cost')
+    plt.title(r'Cost vs. $\beta_1$')
+
+    # Show plot
+    plt.show()
