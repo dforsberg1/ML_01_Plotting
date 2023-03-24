@@ -162,3 +162,112 @@ def cost_vs_iteration(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost
     # Display the plot
     plt.show()
 
+def contour_plot(x_train_0, y_train_0, b0_final_0, b1_final_0, compute_cost_0, p_hist_0):
+
+    """
+    2D Contour plot of cost(b0,b1) over a range of values for b0 and b1
+    """
+
+    # Adjust size of plot
+    plt.rcParams['figure.dpi'] = 80
+
+    # Define a function to format the label values
+    def label_formatter(val):
+        """
+      Function to format the label values.
+
+      Parameters:
+      val (float): The value of the label.
+
+      Returns:
+      str: The formatted string value of the label.
+      """
+        return str(int(round(np.exp(val),0)))
+
+    # Caclulate total cost given optimized parameters
+    cost_final = compute_cost_0(x_train_0, y_train_0, b0_final_0, b1_final_0)
+
+    # Define the b0 and b1 range
+    b0_range = np.linspace(b0_final_0 - 300, b0_final_0 + 300, 100)
+    b1_range = np.linspace(b1_final_0 - 300, b1_final_0 + 300, 100)
+
+    # Define the contour levels
+    levels = [np.log(cost) for cost in [100, 1000, 5000, 12000, 25000, 50000, 100000]]
+
+    # Create a 2D meshgrid of the b0 and b1 values
+    b0, b1 = np.meshgrid(b0_range, b1_range)
+
+    # Compute the cost for each combination of b0 and b1
+    cost_vals = np.zeros_like(b0)
+    for i in range(b0.shape[0]):
+        for j in range(b1.shape[0]):
+            cost_vals[i,j] = compute_cost_0(x_train_0, y_train_0, b0[i,j], b1[i,j])
+
+    # Create a contour plot of the cost function
+    fig, ax = plt.subplots(1,1, figsize=(12, 8))
+
+    # Use the dictionary dlc to map color names to their hexadecimal codes
+    dlc = dict(dlblue='#0096ff', dlorange='#FF9300', dldarkred='#C00000', dlmagenta='#FF40FF', dlpurple='#7030A0')
+    dlcolors = [dlc['dlblue'], dlc['dlorange'], dlc['dldarkred'], dlc['dlmagenta'], dlc['dlpurple']]
+
+    # Create contour lines with specified colors and levels
+    contour = ax.contour(b0, b1, np.log(cost_vals), levels=levels, linewidths=2, alpha=0.7, colors=dlcolors)
+
+    # Label contour lines with formatted values
+    ax.clabel(contour, inline=True, fontsize=7, fmt=label_formatter)
+
+    # Set the labels for the x and y axes
+    ax.set_xlabel(r'$ \beta_0$', fontsize = 15)
+    ax.set_ylabel(r'$ \beta_1$', fontsize = 15)
+
+    # Set the title & subtitle for the plot
+    fig.suptitle(r'Contour Plot of Cost vs. ($\beta_0$, $\beta_1$)', fontsize = 27)
+    ax.set_title(r'J($\beta_0$='+f'{b0_final:.0f}, '+r'$\beta_1$='+f'{b1_final:.0f}) = ' + f'{cost_final:.0f}', fontsize=20)            
+
+    # Plot the purple dotted lines pointing to minimum cost
+    ax.plot([ax.get_xlim()[0], b0_final], [b1_final, b1_final], lw=2, color='purple', ls='dotted')
+    ax.plot([b0_final, b0_final], [ax.get_ylim()[0], b1_final], lw=2, color='purple', ls='dotted')
+    ax.scatter(x=[b0_final], y=[b1_final], c='purple', zorder = 3, s = 10) 
+
+    # Plot the path of gradient descent showing gradient size every 10 steps
+    hist = p_hist_0
+    step = 10
+    resolution = 5
+
+    # Initialize empty list to store arrow coordinates
+    arrow_coords = []
+
+    # Initialize variable called "base"
+    b0_min, b0_max = min(b0_range), max(b0_range)
+    b1_min, b1_max = min(b1_range), max(b1_range)
+
+    for i in range(len(hist)):
+        if ((hist[i][0] > b0_min) and (hist[i][0] < b0_max)) and ((hist[i][1]> b1_min) and (hist[i][1]<b1_max)):
+            base_ind = i
+            break
+    base = hist[base_ind]
+
+    # for loop to plot gradients of gradient descent as red arrows
+    for point in hist[0::step]:
+        # Normalize the gradient to get a unit vector
+        edist = np.sqrt((base[0] - point[0])**2 + (base[1] - point[1])**2)
+        if(edist > resolution or point==hist[-1]):
+            if inbounds(point, base, ax.get_xlim(),ax.get_ylim()):
+                plt.annotate('', xy=point, xytext=base, xycoords='data',
+                         arrowprops={'arrowstyle': '->', 'color': 'r', 'lw': 3},
+                         va='center', ha='center', zorder = 4)
+                # Append arrow coordinates to list
+                arrow_coords.append((base[0], base[1], point[0], point[1]))
+                base=point
+
+    # Convert list of arrow coordinates to pandas DataFrame
+    df_arrow_coords = pd.DataFrame(arrow_coords, columns=['x1', 'y1', 'x2', 'y2'])
+
+    # Print the DataFrame
+    # print(df_arrow_coords)
+
+    # Display the plot
+    plt.show()
+
+
+
